@@ -12,25 +12,40 @@ class App extends Component {
  };
 
  componentWillReceiveProps = async (nextProps) =>{
-    const {Web3} = nextProps;
-    console.log(Web3)
-    var accounts=await Web3.web3.eth.getAccounts();
-    console.log(accounts);
-    setInterval(function() {
-      Web3.web3.eth.getAccounts().then(res=>{
-       if (accounts[0] !== res[0]) {
-         window.location.reload();
-       }
-      });
-    
-   }, 100);
-
-    adCam.methods.fundCampaign(0).send({
-      from:accounts[0],
-      value:Web3.web3.utils.toWei("0.004","ether")
-    }).on('transactionHash', function(hash){
-      console.log(hash);
-  })
+    try {
+      const {Web3} = nextProps;
+      console.log(Web3)
+      var accounts=await Web3.web3.eth.getAccounts();
+      console.log(accounts);
+      if(accounts.length===0) throw "No accounts found";
+      //reload when user changes address or current provider
+      setInterval(function() {
+        Web3.web3.eth.getAccounts().then(res=>{
+         if (accounts[0] !== res[0]) {
+           window.location.reload();
+         }
+        });
+      
+     }, 100);
+      //////////////////////
+      adCam.methods.fundCampaign("cam1").send({
+        from:accounts[0],
+        value:Web3.web3.utils.toWei("0.004","ether")
+      }).on('transactionHash', function(hash){
+        console.log(hash);
+    })
+    var subscription = Web3.web3.eth.subscribe('logs', {
+      address: '0x289bb9e9ce8a001643bc930cd9150fae507cc8b5', //Smart contract address
+  }, function(error, result){
+      if (error) console.log(error);
+  }).on("data", function(trxData){
+    console.log("Event received", trxData);
+    //Code from here would be run immediately when event appeared
+  });
+    } catch (error) {
+      alert(error);
+    }
+   
  }
 
   render() {

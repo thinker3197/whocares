@@ -1,5 +1,5 @@
 import web3 from "./getWeb3";
-const address="0xd0327da03647e19c7070914416483b1cdae2ee3f";
+const address="0x289bb9e9ce8a001643bc930cd9150fae507cc8b5";
 //contract abi//
 var abi=[
 	{
@@ -12,8 +12,8 @@ var abi=[
 			},
 			{
 				"indexed": false,
-				"name": "id",
-				"type": "uint256"
+				"name": "name",
+				"type": "string"
 			}
 		],
 		"name": "CampaignStarted",
@@ -23,8 +23,8 @@ var abi=[
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_id",
-				"type": "uint256"
+				"name": "name",
+				"type": "string"
 			}
 		],
 		"name": "fundCampaign",
@@ -48,8 +48,8 @@ var abi=[
 			},
 			{
 				"indexed": false,
-				"name": "_id",
-				"type": "uint256"
+				"name": "name",
+				"type": "string"
 			}
 		],
 		"name": "Paid",
@@ -59,8 +59,8 @@ var abi=[
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_id",
-				"type": "uint256"
+				"name": "name",
+				"type": "string"
 			},
 			{
 				"name": "funder",
@@ -81,8 +81,8 @@ var abi=[
 				"type": "address"
 			},
 			{
-				"name": "_id",
-				"type": "uint256"
+				"name": "name",
+				"type": "string"
 			}
 		],
 		"name": "payOutBounty",
@@ -100,7 +100,7 @@ var abi=[
 			},
 			{
 				"name": "",
-				"type": "uint256"
+				"type": "bytes32"
 			}
 		],
 		"name": "CamIdToFunding",
@@ -123,7 +123,7 @@ var abi=[
 			},
 			{
 				"name": "",
-				"type": "uint256"
+				"type": "bytes32"
 			},
 			{
 				"name": "",
