@@ -51,4 +51,5 @@ class Campaign(db.Document):
     name = db.StringField()
     owner = db.StringField()
     typ = db.StringField()
+    active = db.BooleanField(default=True)
     constraints = db.DictField()
