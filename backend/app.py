@@ -1,16 +1,20 @@
 from flask import Flask, jsonify
 from flask_login import login_required
 from werkzeug.exceptions import HTTPException
+from flask_cors import CORS
 
 from db import db, login_manager
-from auth import auth
+from auth import auth_bp
+from campaign import campaign_bp
 
 
 app = Flask(__name__)
+cors = CORS(app)
 app.config.from_object('config')
 db.init_app(app)
 login_manager.init_app(app)
-app.register_blueprint(auth)
+app.register_blueprint(auth_bp)
+app.register_blueprint(campaign_bp)
 
 
 @app.route('/', methods=['GET'])

@@ -31,3 +31,11 @@ class User(UserMixin, db.Document):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+class Campaign(UserMixin, db.Document):
+    meta = {'collection': 'campaigns'}
+    name = db.StringField()
+    owner = db.StringField()
+    typ = db.StringField()
+    constraints = db.DictField()
