@@ -17,20 +17,17 @@ app.register_blueprint(campaign_bp)
 
 @app.before_request
 def before_request():
+    #  print(type(request.headers['access_control_request_headers']))
     if not request.endpoint:
         return
     blacklist = ['home', 'auth.register', 'auth.auth']
     if request.endpoint not in blacklist:
-        print(request.endpoint)
-        if request.endpoint.split('.')[0] != 'campaign' or \
-           request.endpoint == 'campaign.campaign_create':
-            if 'access_token' not in request.headers:
-                abort(401)
-        if 'access_token' in request.headers:
-            user = verify(request.headers['access_token'])
-            if not user:
-                abort(401)
-            session['user'] = user
+        if 'access_token' not in request.headers:
+            abort(401)
+        user = verify(request.headers['access_token'])
+        if not user:
+            abort(401)
+        session['user'] = user
 
 
 @app.after_request

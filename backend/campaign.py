@@ -10,14 +10,11 @@ campaign_bp = Blueprint('campaign', __name__, template_folder='templates')
 @campaign_bp.route('/campaign/all', methods=['GET'])
 @cross_origin()
 def campaigns_all():
-    if 'user' in session:
-        user = session.pop('user')
-        usr = user.username
-        if not user.brand:
-            raise Exception(f'user: \'{user.username}\' is not a brand')
+    user = session.pop('user')
+    usr = user.username
+    if user.brand:
         camps = [x.name for x in Campaign.objects(owner=user.username)]
     else:
-        usr = 'all'
         camps = [x.name for x in Campaign.objects()]
     return jsonify(**{'successful': True, 'campaigns': camps, 'user': usr})
 
@@ -25,15 +22,12 @@ def campaigns_all():
 @campaign_bp.route('/campaign/active', methods=['GET'])
 @cross_origin()
 def campaigns_active():
-    if 'user' in session:
-        user = session.pop('user')
-        usr = user.username
-        if not user.brand:
-            raise Exception(f'user: \'{user.username}\' is not a brand')
+    user = session.pop('user')
+    usr = user.username
+    if user.brand:
         camps = [x.name for x in Campaign.objects(
             owner=user.username, active=True)]
     else:
-        usr = 'all'
         camps = [x.name for x in Campaign.objects(active=True)]
     return jsonify(**{'successful': True, 'campaigns': camps, 'user': usr})
 
@@ -41,15 +35,12 @@ def campaigns_active():
 @campaign_bp.route('/campaign/inactive', methods=['GET'])
 @cross_origin()
 def campaigns_inactive():
-    if 'user' in session:
-        user = session.pop('user')
-        usr = user.username
-        if not user.brand:
-            raise Exception(f'user: \'{user.username}\' is not a brand')
+    user = session.pop('user')
+    usr = user.username
+    if user.brand:
         camps = [x.name for x in Campaign.objects(
             owner=user.username, active=False)]
     else:
-        usr = 'all'
         camps = [x.name for x in Campaign.objects(active=False)]
     return jsonify(**{'successful': True, 'campaigns': camps, 'user': usr})
 
@@ -58,6 +49,8 @@ def campaigns_inactive():
 @cross_origin()
 def campaign_by_name(name):
     camp = Campaign.objects(name=name).first()
+    if not camp:
+        raise Exception(f'campaign: \'{name}\' does not exist')
     camp_json = json.loads(camp.to_json())
     camp_json.pop('_id')
     return jsonify(**{'successful': True, 'campaign': camp_json})
@@ -67,6 +60,8 @@ def campaign_by_name(name):
 @cross_origin()
 def campaign_set_active(name):
     camp = Campaign.objects(name=name).first()
+    if not camp:
+        raise Exception(f'campaign: \'{name}\' does not exist')
     camp.active = True
     camp.save()
     camp_json = json.loads(camp.to_json())
@@ -78,6 +73,8 @@ def campaign_set_active(name):
 @cross_origin()
 def campaign_set_inactive(name):
     camp = Campaign.objects(name=name).first()
+    if not camp:
+        raise Exception(f'campaign: \'{name}\' does not exist')
     camp.active = False
     camp.save()
     camp_json = json.loads(camp.to_json())
@@ -91,7 +88,7 @@ def campaign_create():
     user = session.pop('user')
     params = json.loads(request.get_data())
     if Campaign.objects(name=params['name']).first():
-        raise Exception(f'name: \'{params["name"]}\' already exist')
+        raise Exception(f'campaign: \'{params["name"]}\' already exist')
     if not user.brand:
         raise Exception(f'user: \'{user.username}\' is not a brand')
     if params['type'] not in ['clicks', 'installs', 'views']:
