@@ -7,6 +7,7 @@ import configureStore from "./store/configureStore";
 // import { restoreSession } from "./actions";
 
 import "./global.css";
+import "antd/dist/antd.css";
 
 const store = configureStore();
 

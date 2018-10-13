@@ -53,7 +53,7 @@ const promisifiedXHR = (endPoint, type, params = null, customHeaders, useLocalIp
 
 const API = {
   login: (data) => {
-    return promisifiedXHR("", "POST", data);
+    return promisifiedXHR("/auth", "POST", data);
   }
 };
 
