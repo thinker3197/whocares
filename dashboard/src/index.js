@@ -4,14 +4,13 @@ import { Provider } from "react-redux";
 
 import App from "./components/app/";
 import configureStore from "./store/configureStore";
-import { restoreSession } from "./actions";
+// import { restoreSession } from "./actions";
 
-import "./reset.css";
 import "./global.css";
 
 const store = configureStore();
 
-store.dispatch(restoreSession());
+// store.dispatch(restoreSession());
 
 ReactDOM.render(
   <Provider store={store}>
