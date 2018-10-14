@@ -62,8 +62,8 @@ const API = {
   getCurrentCampaigns: () => {
     return promisifiedXHR("/campaign/current", "GET");
   },
-  joinCampaign: (data) => {
-    return promisifiedXHR("/user/join_campaign/<name>")
+  joinCampaign: (name) => {
+    return promisifiedXHR(`/user/join_campaign/${name}`)
   },
   createCampaign: (data) => {
     return promisifiedXHR("/campaign/create", "POST", data);

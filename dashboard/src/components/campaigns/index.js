@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { capitalize } from "underscore.string";
 
 import CreateCampaignModal from "./createCampaignModal";
-import { fetchAllCampaigns, fetchCurrentCampaigns, createCampaign } from "../../actions";
+import { fetchAllCampaigns, fetchCurrentCampaigns, createCampaign, joinCampaign } from "../../actions";
 import { GRADIENTS, LOCAL_SERVER_IP } from "../../constants";
 import adcam from "../../utils/contract";
 import { copyToClipboard } from "../../utils";
@@ -53,6 +53,12 @@ class Campaigns extends Component {
     });
   };
 
+  handleOkJoinCampaign = (name) => {
+    if(name) {
+      this.props.joinCampaign(name);
+    }
+  };
+
   handleClickJoin = (campaign) => {
     const { user } = this.props;
 
@@ -61,7 +67,8 @@ class Campaigns extends Component {
         title: "Sure you want to join this campaign?",
         content: `${capitalize(campaign.name)} created by ${campaign.owner}`,
         okText: "Yes",
-        cancelText: "No"
+        cancelText: "No",
+        onOk: (e) => this.handleOkJoinCampaign(campaign.name)
       });
     }
   };
@@ -242,7 +249,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchAllCampaigns: () => dispatch(fetchAllCampaigns()),
     fetchCurrentCampaigns: () => dispatch(fetchCurrentCampaigns()),
-    createCampaign: (data) => dispatch(createCampaign(data))
+    createCampaign: (data) => dispatch(createCampaign(data)),
+    joinCampaign: (name) => dispatch(joinCampaign(name))
   };
 }
 

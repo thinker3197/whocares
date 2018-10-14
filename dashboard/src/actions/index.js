@@ -170,3 +170,23 @@ export const fecthCampaignDetailsSuccess = (activeCampaign, activeStats) => {
     activeStats
   };
 }
+
+export const joinCampaign = (name) => {
+  return dispatch => {
+    return API
+    .joinCampaign(name)
+    .then(res => {
+      console.log(res);
+
+      if(res.successful) {
+        message.success("Campaign joined successfully!");
+
+        dispatch(fetchAllCampaigns());
+        dispatch(fetchCurrentCampaigns());
+      }
+    })
+    .catch(err => {
+      throw err;
+    });
+  };
+}

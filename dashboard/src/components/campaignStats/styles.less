@@ -61,4 +61,39 @@
       justify-content: center;
     }
   }
+  &__ranking {
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 8px;
+    box-shadow: 0px 4px 5px rgba(219, 219, 219, 0.2);
+    transition: box-shadow 0.3s ease-out;
+    &:hover {
+      box-shadow: 0px 4px 5px rgba(219, 219, 219, 1);
+    }
+  }
+  &__ranking-item {
+    display: grid;
+    align-items: center;
+    margin-bottom: 6px;
+    grid-template-columns: 10% 20% 70%;
+    p {
+      margin: 0;
+      font-size: 18px;
+    }
+    .stats-tags {
+      padding: 12px;
+      background: #fafafa;
+      border-radius: 4px;
+      text-align: right;
+    }
+  }
+  &__ranking-logo {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #FFF9E8;
+    border-radius: 4px;
+    margin-right: 12px;
+  }
 }
