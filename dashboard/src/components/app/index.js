@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import {connect} from "react-redux";
 import Home from "../home";
 import Login from "../login";
 import PrivateRoute from "../privateRoute";
@@ -36,14 +35,7 @@ class App extends Component {
       }).on('transactionHash', function(hash){
         console.log(hash);
     })
-    var subscription = Web3.web3.eth.subscribe('logs', {
-      address: '0x289bb9e9ce8a001643bc930cd9150fae507cc8b5', //Smart contract address
-  }, function(error, result){
-      if (error) console.log(error);
-  }).on("data", function(trxData){
-    console.log("Event received", trxData);
-    //Code from here would be run immediately when event appeared
-  });
+
     } catch (error) {
       alert(error);
     }
