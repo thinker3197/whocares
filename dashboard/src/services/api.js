@@ -64,6 +64,15 @@ const API = {
   },
   joinCampaign: (data) => {
     return promisifiedXHR("/user/join_campaign/<name>")
+  },
+  createCampaign: (data) => {
+    return promisifiedXHR("/campaign/create", "POST", data);
+  },
+  getRankings: (name) => {
+    return promisifiedXHR(`/campaign/stats/${name}`, "GET");
+  },
+  getCampaignDetails: (name) => {
+    return promisifiedXHR(`/campaign/name/${name}`, "GET");
   }
 };
 

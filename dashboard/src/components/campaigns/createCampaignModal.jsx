@@ -9,6 +9,7 @@ const CreateCampaignModal = (props) => {
     handleOk,
     handleCancel,
     name,
+    description,
     type,
     constraints,
     url,
@@ -22,6 +23,9 @@ const CreateCampaignModal = (props) => {
         <Form.Item label="Name">
           <Input value={name} onChange={handleChangeField} name="name" placeholder="Enter campaign name" />
         </Form.Item>
+        <Form.Item label="Description">
+          <Input value={description} onChange={handleChangeField} name="description" placeholder="Enter campaign description" />
+        </Form.Item>
         <Form.Item label="Campaign type">
           <RadioGroup value={type} onChange={handleChangeField} name="type">
             <Radio value="clicks">Clicks</Radio>
@@ -32,7 +36,7 @@ const CreateCampaignModal = (props) => {
         {
           type === "clicks" && (
             <Form.Item label="Number of clicks">
-              <Input value={constraints} onChange={handleChangeField} name="constraints" placeholder="Enter campaign name" />
+              <Input value={constraints} onChange={handleChangeField} name="constraints" placeholder="Enter campaign goal" />
             </Form.Item>
           )
         }
@@ -40,7 +44,7 @@ const CreateCampaignModal = (props) => {
           <Input value={url} onChange={handleChangeField} name="url" placeholder="Enter campaign url" />
         </Form.Item>
         <Form.Item label="Reserve">
-          <Input value={reserve} onChange={handleChangeField} name="reserve" placeholder="Enter reserve value for campaign" />
+          <Input value={reserve} onChange={handleChangeField} addonAfter="ETH" name="reserve" placeholder="Enter reserve value for campaign" />
         </Form.Item>
       </Form>
     </Modal>

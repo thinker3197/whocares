@@ -6,6 +6,7 @@ import { Layout } from "antd";
 import Sidebar from "../sidebar";
 import CustomHeader from "../customHeader";
 import Campaigns from "../campaigns";
+import CampaignStats from "../campaignStats";
 
 import "./styles.less";
 
@@ -36,7 +37,8 @@ class Home extends Component {
           <Content className="home__content">
             <div className="home__card">
               <Switch>
-                <Route path="/campaigns" component={Campaigns} />
+                <Route exact path="/campaigns" component={Campaigns} />
+                <Route path="/campaigns/:name" component={CampaignStats} />
                 <Redirect to="/campaigns" />
               </Switch>
             </div>
