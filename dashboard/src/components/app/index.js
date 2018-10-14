@@ -45,7 +45,7 @@ class App extends Component {
     //Code from here would be run immediately when event appeared
   });
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
 
  }
