@@ -63,9 +63,10 @@ def run_refcode(refcode):
     browser = request.user_agent.browser
     browser = browser if browser else 'none'
 
-    ip = request.remote_addr
+    ip = request.access_route[0]
     ip_url = f'https://ipinfo.io/{ip}?token=3e7dac37784e5c'
     ip_data = requests.get(ip_url).json()
+    print(ip, ip_url, ip_data)
 
     for base in [camp.stats, user.stats[camp.name]]:
         for x, y in [('platform', platform), ('browser', browser)]:

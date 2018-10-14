@@ -35,7 +35,7 @@ def campaigns_current():
 def campaigns_stats(name):
     if not Campaign.objects(name=name).first():
         raise Exception(f'campaign: \'{name}\' does not exist')
-    users = [{'username': x.username, 'stats': x.stats}
+    users = [{'username': x.username, 'stats': x.stats, 'eth': x.eth}
              for x in User.objects(campaigns__contains=name)][::-1]
     return jsonify(**{'successful': True, 'stats': users})
 
@@ -71,6 +71,11 @@ def campaign_by_name(name):
         raise Exception(f'campaign: \'{name}\' does not exist')
     camp_json = json.loads(camp.to_json())
     camp_json.pop('_id')
+    user = session.pop('user')
+    if not user.brand:
+        return jsonify(**{
+            'successful': True, 'campaign': camp_json,
+            'user_stats': user.stats})
     return jsonify(**{'successful': True, 'campaign': camp_json})
 
 
