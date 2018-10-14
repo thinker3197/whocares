@@ -1,7 +1,7 @@
 from flask import current_app
 from flask_mongoengine import MongoEngine
 from itsdangerous import BadSignature
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import JSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -13,6 +13,7 @@ def verify(token):
     try:
         data = s.loads(token)
     except BadSignature:
+        print('here')
         return None
     if 'verify' not in data:
         return None
@@ -29,6 +30,8 @@ class User(db.Document):
     password_hash = db.StringField()
     brand = db.BooleanField(default=False)
     enable = db.BooleanField(default=True)
+    campaigns = db.ListField()
+    stats = db.DictField()
 
     @property
     def password(self):
@@ -50,6 +53,18 @@ class Campaign(db.Document):
     meta = {'collection': 'campaigns'}
     name = db.StringField()
     owner = db.StringField()
+    desc = db.StringField()
     typ = db.StringField()
+    redirect_url = db.StringField()
     active = db.BooleanField(default=True)
     constraints = db.DictField()
+    other = db.DictField()
+    stats = db.DictField()
+    users = db.ListField()
+
+
+class Url(db.Document):
+    meta = {'collection': 'urls'}
+    url = db.StringField()
+    username = db.StringField()
+    campaign_name = db.StringField()

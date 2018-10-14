@@ -1,16 +1,16 @@
 import json
 
 from flask import Blueprint, jsonify, request
-from flask_cors import cross_origin
+from flask_cors import CORS
 
 from db import User
 
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
+CORS(auth_bp)
 
 
 @auth_bp.route('/auth', methods=['POST'])
-@cross_origin()
 def auth():
     params = json.loads(request.get_data())
     user = User.objects(username=params['username']).first()
@@ -24,7 +24,6 @@ def auth():
 
 
 @auth_bp.route('/register', methods=['POST'])
-@cross_origin()
 def register():
     params = json.loads(request.get_data())
     if User.objects(username=params['username']).first():

@@ -1,52 +1,60 @@
 import json
 from flask import Blueprint, jsonify, request, session
-from flask_cors import cross_origin
+from flask_cors import CORS
 
 from db import Campaign
 
 campaign_bp = Blueprint('campaign', __name__, template_folder='templates')
+CORS(campaign_bp)
 
 
 @campaign_bp.route('/campaign/all', methods=['GET'])
-@cross_origin()
 def campaigns_all():
     user = session.pop('user')
     usr = user.username
     if user.brand:
-        camps = [x.name for x in Campaign.objects(owner=user.username)]
+        camps = [x for x in Campaign.objects(owner=user.username)]
     else:
-        camps = [x.name for x in Campaign.objects()]
+        camps = [x for x in Campaign.objects()]
+    return jsonify(**{'successful': True, 'campaigns': camps, 'user': usr})
+
+
+@campaign_bp.route('/campaign/current', methods=['GET'])
+def campaigns_current():
+    user = session.pop('user')
+    usr = user.username
+    if user.brand:
+        camps = [x for x in Campaign.objects(owner=user.username, active=True)]
+    else:
+        camps = [x for x in Campaign.objects(name__in=user.campaigns)]
     return jsonify(**{'successful': True, 'campaigns': camps, 'user': usr})
 
 
 @campaign_bp.route('/campaign/active', methods=['GET'])
-@cross_origin()
 def campaigns_active():
     user = session.pop('user')
     usr = user.username
     if user.brand:
-        camps = [x.name for x in Campaign.objects(
+        camps = [x for x in Campaign.objects(
             owner=user.username, active=True)]
     else:
-        camps = [x.name for x in Campaign.objects(active=True)]
+        camps = [x for x in Campaign.objects(active=True)]
     return jsonify(**{'successful': True, 'campaigns': camps, 'user': usr})
 
 
 @campaign_bp.route('/campaign/inactive', methods=['GET'])
-@cross_origin()
 def campaigns_inactive():
     user = session.pop('user')
     usr = user.username
     if user.brand:
-        camps = [x.name for x in Campaign.objects(
+        camps = [x for x in Campaign.objects(
             owner=user.username, active=False)]
     else:
-        camps = [x.name for x in Campaign.objects(active=False)]
+        camps = [x for x in Campaign.objects(active=False)]
     return jsonify(**{'successful': True, 'campaigns': camps, 'user': usr})
 
 
 @campaign_bp.route('/campaign/name/<name>', methods=['GET'])
-@cross_origin()
 def campaign_by_name(name):
     camp = Campaign.objects(name=name).first()
     if not camp:
@@ -57,7 +65,6 @@ def campaign_by_name(name):
 
 
 @campaign_bp.route('/campaign/set_active/<name>', methods=['GET'])
-@cross_origin()
 def campaign_set_active(name):
     camp = Campaign.objects(name=name).first()
     if not camp:
@@ -70,7 +77,6 @@ def campaign_set_active(name):
 
 
 @campaign_bp.route('/campaign/set_inactive/<name>', methods=['GET'])
-@cross_origin()
 def campaign_set_inactive(name):
     camp = Campaign.objects(name=name).first()
     if not camp:
@@ -83,7 +89,6 @@ def campaign_set_inactive(name):
 
 
 @campaign_bp.route('/campaign/create', methods=['POST'])
-@cross_origin()
 def campaign_create():
     user = session.pop('user')
     params = json.loads(request.get_data())
@@ -94,6 +99,10 @@ def campaign_create():
     if params['type'] not in ['clicks', 'installs', 'views']:
         raise Exception(f'type: \'{params["type"]}\' is not valid')
     campaign = Campaign(params['name'], user.username, params['type'])
+    campaign.desc = params['desc']
+    campaign.other = params['other']
+    campaign.redirect_url = params['redirect_url']
+    campaign.stats = {'clicks': 0}
     campaign.constraints = params['constraints']
     camp_json = json.loads(campaign.to_json())
     campaign.save()
