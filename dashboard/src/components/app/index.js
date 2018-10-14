@@ -21,14 +21,14 @@ class App extends Component {
       console.log(accounts);
       if(accounts.length===0) throw "No accounts found";
       //reload when user changes address or current provider
-    //   setInterval(function() {
-    //     Web3.web3.eth.getAccounts().then(res=>{
-    //      if (accounts[0] !== res[0]) {
-    //        window.location.reload();
-    //      }
-    //     });
+      setInterval(function() {
+        Web3.web3.eth.getAccounts().then(res=>{
+         if (accounts[0] !== res[0]) {
+           window.location.reload();
+         }
+        });
 
-    //  }, 100);
+     }, 100);
       //////////////////////
 
     } catch (error) {

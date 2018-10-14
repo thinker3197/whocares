@@ -47,6 +47,7 @@ class Login extends Component {
           <div>
             <div className="login__head">
               <h1>Revolutionized promotion platform based on blockchain.</h1>
+              <h3># I-ambassador</h3>
               <p>Create campaigns based on your marketing needs and have users promote your campaigns to earn rewards</p>
             </div>
             <div className="login__form">
