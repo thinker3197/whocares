@@ -7,6 +7,7 @@ import CreateCampaignModal from "./createCampaignModal";
 import { fetchAllCampaigns, fetchCurrentCampaigns } from "../../actions";
 import { GRADIENTS } from "../../constants";
 import adcam from "../../utils/contract";
+import getWeb3 from "../../utils/getWeb3";
 import marketing from "../../assets/marketing.jpg";
 import "./styles.less";
 
@@ -18,7 +19,7 @@ class Campaigns extends Component {
     constraints: undefined,
     url: undefined,
     reserve: undefined,
-    activeCampaigns: undefined
+    activeCampaigns: undefined,
   };
 
   componentDidMount() {
@@ -66,8 +67,9 @@ class Campaigns extends Component {
   };
 
   onOk = async(e) => {
-    const {web3} = this.props.web3;
+    var web3=getWeb3;
     const accounts=await web3.eth.getAccounts();
+    console.log(accounts);
     adcam.methods.fundCampaign(this.state.name).send({
        from:accounts[0],
        value:web3.utils.toWei(""+this.state.reserve,"ether")
@@ -189,8 +191,9 @@ class Campaigns extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state);
   return {
-    web3: state.web3Red.web3,
+    web3: state.web3Red,
     campaigns: state.api.campaigns,
     user: state.user.user,
     currentCampaigns: state.api.currentCampaigns
