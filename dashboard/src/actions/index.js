@@ -41,14 +41,14 @@ export const restoreSession = () => {
   };
 }
 
-export const fecthAllCampaigns = () => {
+export const fetchAllCampaigns = () => {
   return dispatch => {
     return API
       .getAllCampaigns()
       .then(res => {
         console.log(res);
 
-        dispatch(fecthAllCampaignsSuccess(res.campaigns));
+        dispatch(fetchAllCampaignsSuccess(res.campaigns));
       })
       .catch(err => {
         throw err;
@@ -56,10 +56,32 @@ export const fecthAllCampaigns = () => {
   };
 }
 
-export const fecthAllCampaignsSuccess = (campaigns) => {
+export const fetchAllCampaignsSuccess = (campaigns) => {
   return {
     type: "FETCH_ALL_CAMPAIGN_SUCCESS",
     campaigns
+  };
+}
+
+export const fetchCurrentCampaigns = () => {
+  return dispatch => {
+    return API
+      .getCurrentCampaigns()
+      .then(res => {
+        console.log(res);
+
+        dispatch(fetchCurrentCampaignsSuccess(res.campaigns));
+      })
+      .catch(err => {
+        throw err;
+      });
+  };
+}
+
+export const fetchCurrentCampaignsSuccess = (currentCampaigns) => {
+  return {
+    type: "FETCH_CURRENT_CAMPAIGN_SUCCESS",
+    currentCampaigns
   };
 }
 

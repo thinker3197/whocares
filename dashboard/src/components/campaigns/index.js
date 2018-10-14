@@ -3,7 +3,8 @@ import { Badge, Modal, Icon } from "antd";
 import { connect } from "react-redux";
 import { capitalize } from "underscore.string";
 
-import { fecthAllCampaigns } from "../../actions";
+import CreateCampaignModal from "./createCampaignModal";
+import { fetchAllCampaigns, fetchCurrentCampaigns } from "../../actions";
 import { GRADIENTS } from "../../constants";
 
 import marketing from "../../assets/marketing.jpg";
@@ -11,20 +12,26 @@ import "./styles.less";
 
 class Campaigns extends Component {
   state = {
+    visible: false,
+    name: undefined,
+    type: undefined,
+    constraints: undefined,
+    url: undefined,
+    reserve: undefined,
     activeCampaigns: undefined
   };
 
   componentDidMount() {
-    const { fecthAllCampaigns } = this.props;
+    const { fetchAllCampaigns, fetchCurrentCampaigns } = this.props;
 
-    fecthAllCampaigns();
+    fetchAllCampaigns();
+    fetchCurrentCampaigns();
   };
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.campaigns !== nextProps.campaigns) {
+    if(this.props.currentCampaigns !== nextProps.currentCampaigns) {
       this.setState({
-        activeCampaigns: nextProps.campaigns
-          .filter(campaign => campaign.active)
+        activeCampaigns: nextProps.currentCampaigns
           .map((campaign, index) => {
             campaign.gradient = GRADIENTS[index];
 
@@ -32,6 +39,15 @@ class Campaigns extends Component {
           })
       });
     }
+    if(this.props.web3 !== nextProps.web3) {
+      console.log(nextProps.web3);
+    }
+  };
+
+  handleChangeField = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
   };
 
   handleClickJoin = (campaign) => {
@@ -44,11 +60,28 @@ class Campaigns extends Component {
   };
 
   handleClickCreate = (e) => {
+    this.setState({
+      visible: true
+    });
+  };
 
+  onOk = (e) => {
+    console.log(this.state);
+  };
+
+  onCancel = (e) => {
+    this.setState({
+      visible: false,
+      name: undefined,
+      type: undefined,
+      constraints: undefined,
+      url: undefined,
+      reserve: undefined,
+    });
   };
 
   render() {
-    const { activeCampaigns } = this.state;
+    const { activeCampaigns, visible, name, type, constraints, url, reserve } = this.state;
     const { campaigns, user } = this.props;
 
     return (
@@ -131,6 +164,17 @@ class Campaigns extends Component {
             </div>
           )
         }
+        <CreateCampaignModal
+          visible={visible}
+          handleOk={this.onOk}
+          handleCancel={this.onCancel}
+          name={name}
+          type={type}
+          constraints={constraints}
+          url={url}
+          reserve={reserve}
+          handleChangeField={this.handleChangeField}
+        />
       </div>
     );
   };
@@ -138,14 +182,18 @@ class Campaigns extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    web3: state.web3Red.web3,
     campaigns: state.api.campaigns,
-    user: state.user.user
+    user: state.user.user,
+    currentCampaigns: state.api.currentCampaigns
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fecthAllCampaigns: () => dispatch(fecthAllCampaigns())
+    fetchAllCampaigns: () => dispatch(fetchAllCampaigns()),
+    fetchCurrentCampaigns: () => dispatch(fetchCurrentCampaigns()),
+
   };
 }
 

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
-import {connect} from "react-redux";
+
 import Home from "../home";
 import Login from "../login";
 import PrivateRoute from "../privateRoute";
-import {setWeb3} from "../../actions/index";
+import { setWeb3 } from "../../actions";
 import adCam from "../../utils/contract";
 
 class App extends Component {
@@ -55,7 +55,6 @@ class App extends Component {
 
     return (
       <div id="app">
-        <p>{this.props.web3 ? this.props.web3.providers : "-"}</p>
         <Router>
           <Switch>
             <Route exact path="/login" component={Login} />
@@ -72,11 +71,10 @@ const mapStateToProps=(state)=>{
     loggedIn: state.user.loggedIn
   };
 }
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    set_Web3:function(){
-      dispatch(setWeb3());
-    }
+    set_Web3: () => dispatch(setWeb3())
   };
 };
 

@@ -1,5 +1,6 @@
 const initialState = {
-  campaigns: []
+  campaigns: [],
+  currentCampaigns: []
 };
 
 export default (state = initialState, action) => {
@@ -7,6 +8,11 @@ export default (state = initialState, action) => {
     case "FETCH_ALL_CAMPAIGN_SUCCESS":
       return Object.assign({}, state, {
         campaigns: action.campaigns
+      });
+
+    case "FETCH_CURRENT_CAMPAIGN_SUCCESS":
+      return Object.assign({}, state, {
+        currentCampaigns: action.currentCampaigns
       });
 
     default:
