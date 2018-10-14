@@ -55,6 +55,7 @@ class Campaign(db.Document):
     owner = db.StringField()
     desc = db.StringField()
     typ = db.StringField()
+    reserve = db.StringField()
     redirect_url = db.StringField()
     active = db.BooleanField(default=True)
     constraints = db.DictField()

@@ -51,10 +51,10 @@ def test():
     return jsonify(**{'successful': True, 'user': user_json})
 
 
-#  @app.errorhandler(Exception)
-#  def handle_error(e):
-#      c = 500 if not isinstance(e, HTTPException) else e.code
-#      return jsonify(**{'successful': False, 'status': c, 'error': str(e)}), c
+@app.errorhandler(Exception)
+def handle_error(e):
+    c = 500 if not isinstance(e, HTTPException) else e.code
+    return jsonify(**{'successful': False, 'status': c, 'error': str(e)}), c
 
 
 if __name__ == '__main__':
