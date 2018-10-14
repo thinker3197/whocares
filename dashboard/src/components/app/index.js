@@ -37,7 +37,7 @@ class App extends Component {
     })
 
     } catch (error) {
-      alert(error);
+      console.error(error);
     }
 
  }

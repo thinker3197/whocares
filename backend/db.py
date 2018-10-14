@@ -1,25 +1,37 @@
-from flask_login import UserMixin, LoginManager
+from flask import current_app
 from flask_mongoengine import MongoEngine
+from itsdangerous import BadSignature
+from itsdangerous import JSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 db = MongoEngine()
-login_manager = LoginManager()
-login_manager.session_protection = 'strong'
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.objects(pk=user_id).first()
+def verify(token):
+    s = Serializer(current_app.config['SECRET_KEY'])
+    try:
+        data = s.loads(token)
+    except BadSignature:
+        print('here')
+        return None
+    if 'verify' not in data:
+        return None
+    user = User.objects(pk=data['verify']).first()
+    if not user:
+        return None
+    return user
 
 
-class User(UserMixin, db.Document):
+class User(db.Document):
     meta = {'collection': 'users'}
     username = db.StringField()
     eth = db.StringField()
     password_hash = db.StringField()
     brand = db.BooleanField(default=False)
     enable = db.BooleanField(default=True)
+    campaigns = db.ListField()
+    stats = db.DictField()
 
     @property
     def password(self):
@@ -32,10 +44,27 @@ class User(UserMixin, db.Document):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def generate_confirmation_token(self):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        return s.dumps({'verify': str(self.id)})
 
-class Campaign(UserMixin, db.Document):
+
+class Campaign(db.Document):
     meta = {'collection': 'campaigns'}
     name = db.StringField()
     owner = db.StringField()
+    desc = db.StringField()
     typ = db.StringField()
+    redirect_url = db.StringField()
+    active = db.BooleanField(default=True)
     constraints = db.DictField()
+    other = db.DictField()
+    stats = db.DictField()
+    users = db.ListField()
+
+
+class Url(db.Document):
+    meta = {'collection': 'urls'}
+    url = db.StringField()
+    username = db.StringField()
+    campaign_name = db.StringField()
