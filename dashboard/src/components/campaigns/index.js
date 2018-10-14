@@ -6,7 +6,7 @@ import { capitalize } from "underscore.string";
 import CreateCampaignModal from "./createCampaignModal";
 import { fetchAllCampaigns, fetchCurrentCampaigns } from "../../actions";
 import { GRADIENTS } from "../../constants";
-
+import adcam from "../../utils/contract";
 import marketing from "../../assets/marketing.jpg";
 import "./styles.less";
 
@@ -65,8 +65,16 @@ class Campaigns extends Component {
     });
   };
 
-  onOk = (e) => {
-    console.log(this.state);
+  onOk = async(e) => {
+    const {web3} = this.props.web3;
+    const accounts=await web3.eth.getAccounts();
+    adcam.methods.fundCampaign(this.state.name).send({
+       from:accounts[0],
+       value:web3.utils.toWei(""+this.state.reserve,"ether")
+    }).on("receipt",(receipt)=>{
+         console.log(receipt);
+    })
+
   };
 
   onCancel = (e) => {
