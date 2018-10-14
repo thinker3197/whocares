@@ -1,25 +1,26 @@
-import TOKEN from "./token";
-import { BASE_URI, LOCAL_SERVER_IP } from "../constants";
+import store from "local-storage";
+
+import { LOCAL_SERVER_IP, WHOCARES_TOKEN_KEY } from "../constants";
 import { isJson } from "../utils";
 
-const promisifiedXHR = (endPoint, type, params = null, customHeaders, useLocalIp = false) => {
+const promisifiedXHR = (endPoint, type, params = null, useLocalIp = false) => {
   return new Promise((resolve, reject) => {
-    let url = BASE_URI + endPoint;
+    const access_token = store(WHOCARES_TOKEN_KEY);
+    let url = LOCAL_SERVER_IP + endPoint;
+
+    if(access_token) {
+      url += `?token=${access_token}`;
+    }
 
     if (useLocalIp) {
       url = LOCAL_SERVER_IP + endPoint;
     }
 
-    let headers;
 
-    if (customHeaders) {
-      headers = customHeaders;
-    } else {
-      headers = {
-        "Content-Type": "application/json",
-        "access_token": TOKEN.get()
-      };
-    }
+    const headers = {
+      "Content-Type": "application/json",
+      "access_token": access_token ? access_token : null
+    };
 
     const xhr = new XMLHttpRequest();
 
@@ -54,6 +55,9 @@ const promisifiedXHR = (endPoint, type, params = null, customHeaders, useLocalIp
 const API = {
   login: (data) => {
     return promisifiedXHR("/auth", "POST", data);
+  },
+  getAllCampaigns: () => {
+    return promisifiedXHR("/campaign/all", "GET");
   }
 };
 

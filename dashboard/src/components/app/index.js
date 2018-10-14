@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import {connect} from "react-redux";
 import Home from "../home";
@@ -6,6 +7,7 @@ import Login from "../login";
 import PrivateRoute from "../privateRoute";
 import {setWeb3} from "../../actions/index";
 import adCam from "../../utils/contract";
+
 class App extends Component {
  componentDidMount() {
   this.props.set_Web3();
@@ -25,7 +27,7 @@ class App extends Component {
            window.location.reload();
          }
         });
-      
+
      }, 100);
       //////////////////////
       adCam.methods.fundCampaign("cam1").send({
@@ -45,11 +47,11 @@ class App extends Component {
     } catch (error) {
       alert(error);
     }
-   
+
  }
 
   render() {
-    const { authenticated } = this.props;
+    const { loggedIn } = this.props;
 
     return (
       <div id="app">
@@ -57,7 +59,7 @@ class App extends Component {
         <Router>
           <Switch>
             <Route exact path="/login" component={Login} />
-            <PrivateRoute authenticated={false} path="/" redirectPath="/login" component={Home} />
+            <PrivateRoute authenticated={loggedIn} path="/" redirectPath="/login" component={Home} />
           </Switch>
         </Router>
       </div>
@@ -65,7 +67,10 @@ class App extends Component {
   }
 }
 const mapStateToProps=(state)=>{
-  return {Web3: state.web3Red};
+  return {
+    Web3: state.web3Red,
+    loggedIn: state.user.loggedIn
+  };
 }
 const mapDispatchToProps = (dispatch) => {
   return {

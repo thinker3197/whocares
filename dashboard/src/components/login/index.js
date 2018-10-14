@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { Input, Button } from "antd";
+import { Input, Button, Row, Col } from "antd";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
+import { login } from "../../actions";
 import logo from "../../assets/logo.svg";
+import collabImg from "../../assets/shapes_collaboration.png";
 
-import "./styles.css";
+import "./styles.less";
 
 class Login extends Component {
   state = {
@@ -19,12 +21,26 @@ class Login extends Component {
     });
   };
 
-  render() {
+  handleClickLogin = (e) => {
+    const { login } = this.props;
     const { username, password } = this.state;
 
+    if(username && password) {
+      login({username, password});
+    }
+  };
+
+  render() {
+    const { username, password } = this.state;
+    const { loggedIn } = this.props;
+
+    if(loggedIn) {
+      return <Redirect to="/" />
+    }
+
     return (
-      <div className="login">
-        <div className="login__content">
+      <Row className="login">
+        <Col span={12} className="login__content">
           <div className="logo">
             <img src={logo} />
           </div>
@@ -36,7 +52,8 @@ class Login extends Component {
             <div className="login__form">
               <Input value={username} onChange={this.handleChangeField} name="username" placeholder="Enter your username" />
               <Input value={password} onChange={this.handleChangeField} name="password" placeholder="Enter your password" />
-              <Button>Login</Button>
+              <Button onClick={this.handleClickLogin} type="primary">Login</Button>
+              <p>Not a whocares user? <a>Sign up</a> now</p>
             </div>
           </div>
           <div className="login__footer">
@@ -44,13 +61,25 @@ class Login extends Component {
             <a>Terms</a>
             <a>Privacy</a>
           </div>
-        </div>
-        <div>
-
-        </div>
-      </div>
+        </Col>
+        <Col span={12} className="login__brand">
+          <img src={collabImg} />
+        </Col>
+      </Row>
     );
   };
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    loggedIn: state.user.loggedIn
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    login: (data) => dispatch(login(data))
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

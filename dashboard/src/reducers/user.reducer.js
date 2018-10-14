@@ -1,13 +1,15 @@
 const initialState = {
-  campaigns: []
+  loggedIn: false,
+  user: undefined
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case "FETCH_ALL_CAMPAIGN_SUCCESS":
-      return Object.assign({}, state, {
-        campaigns: action.campaigns
-      });
+    case "LOGIN_SUCCESS":
+      return {
+        loggedIn: true,
+        user: action.user
+      };
 
     default:
       return state;
