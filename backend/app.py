@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify, request, abort, session
 from werkzeug.exceptions import HTTPException
 from flask_cors import CORS
@@ -58,4 +59,5 @@ def handle_error(e):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, port=port)
